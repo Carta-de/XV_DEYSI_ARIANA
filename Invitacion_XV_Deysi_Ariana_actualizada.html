@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es" class="gate-locked">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Invitación XV Años de Deysi Ariana</title>
+
+  <!-- Fuentes oficiales del diseño -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@400;600;700&family=Pinyon+Script&family=Prata&display=swap" rel="stylesheet">
+
+  <!-- Precarga de recursos gráficos originales -->
+  <link rel="preload" as="image" href="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/invitaciones/a447947c-b1c1-40b6-9bf7-bcbe307c83a8/canvas-v4/4d10a52a-13f2-461d-8731-22fd8713642d.webp"/>
+  <link rel="preload" as="image" href="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/99f0bf7b-57ee-4f99-9641-6ef721e7dfec.webp"/>
+  <link rel="preload" as="image" href="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/75679409-77f9-4fe6-a872-7cb9d05b8a2a.webp"/>
+  <link rel="preload" as="image" href="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/a4a3f3f2-e9fd-4083-b09f-8770eb8cb41a.webp"/>
+  <link rel="preload" as="image" href="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/cce3feff-60a0-41bf-a16c-da5720191b4f.webp"/>
+  <link rel="preload" as="image" href="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/926c341f-ce0f-47af-9880-c8b3dfc2af54.webp"/>
+  <link rel="preload" as="image" href="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/7d9a27a7-1fc6-4640-acad-1a0cd79e1962.webp"/>
+  <link rel="preload" as="image" href="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/e9cc4dd3-739c-4fb7-9fa3-fc9e5b1d437c.webp"/>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: 'Prata', serif;
+      color: #ffffff;
+      touch-action: manipulation;
+      /* Fondo exterior degradado idéntico a la vista de escritorio de tu primera imagen */
+      background: linear-gradient(
+        180deg,
+        #cfc9b9 0%,
+        #d8d2c3 28%,
+        #8a2a2f 52%,
+        #680712 72%,
+        #4a030b 100%
+      );
+      background-attachment: fixed;
+    }
+
+    /* Viñeta lateral suave para dar profundidad igual a la referencia */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 45%, transparent 25%, rgba(0, 0, 0, 0.42) 100%);
+      z-index: 0;
+    }
+
+    .page-viewport {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* Columna de invitación de 400px con sombra lateral pronunciada */
+    .invitation-scaler {
+      width: 400px;
+      position: relative;
+      background-color: #5e050f;
+      box-shadow: 0 0 45px rgba(0, 0, 0, 0.65), 0 0 15px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    .canvas-section {
+      position: relative;
+      width: 400px;
+      height: 900px;
+      background-color: #5e050f;
+      overflow: hidden;
+      margin-bottom: -1px;
+    }
+
+    .section-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Posicionamiento de cada elemento */
+    .primitive {
+      position: absolute;
+      transform-origin: center center;
+      box-sizing: border-box;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .primitive.interactive {
+      pointer-events: auto;
+    }
+
+    /* ========================================================
+       ANIMACIONES AL DESLIZAR (SCROLL)
+    ======================================================== */
+    .anim-node {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      perspective: 800px;
+      will-change: opacity, transform;
+      transition-property: opacity, transform;
+      transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .speed-100 { transition-duration: 0.85s; }
+    .speed-55  { transition-duration: 1.15s; }
+    .speed-50  { transition-duration: 1.25s; }
+    .speed-45  { transition-duration: 1.35s; }
+
+    /* Estados ocultos antes de entrar en pantalla */
+    .effect-fade-in {
+      opacity: 0;
+      transform: none;
+    }
+
+    .effect-rise {
+      opacity: 0;
+      transform: translateY(56px);
+    }
+
+    .effect-diagonal-in {
+      opacity: 0;
+      transform: translateX(40px) translateY(40px) rotate(12deg);
+    }
+
+    .effect-diagonal-right {
+      opacity: 0;
+      transform: translateX(-40px) translateY(40px) rotate(-12deg);
+    }
+
+    /* Cuando el elemento entra en pantalla */
+    .anim-node.in-view {
+      opacity: 1 !important;
+      transform: translateX(0px) translateY(0px) rotate(0deg) !important;
+    }
+
+    /* ========================================================
+       IMÁGENES Y MÁSCARAS DE COLOR
+    ======================================================== */
+    .img-fit-cover {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      display: block;
+    }
+
+    .img-fit-contain {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: contain;
+      display: block;
+    }
+
+    .solid-mask {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #5e050f;
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
+    }
+
+    .tinted-figure {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      isolation: isolate;
+      overflow: hidden;
+    }
+    .tinted-figure img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .tinted-overlay {
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: color;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
+    }
+
+    /* ========================================================
+       TEXTOS, CONTADOR Y BOTONES
+    ======================================================== */
+    .text-node {
+      width: 100%;
+      height: 100%;
+      white-space: pre-wrap;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    .countdown-row {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 100%;
+      font-family: "Pinyon Script", cursive;
+    }
+    .cd-col {
+      text-align: center;
+    }
+    .cd-num {
+      color: #e6e2d3;
+      font-weight: 700;
+      font-family: "Pinyon Script", cursive;
+      font-size: 24px;
+      line-height: 1;
+    }
+    .cd-lbl {
+      color: #e6e2d3;
+      font-family: "Pinyon Script", cursive;
+      font-size: 12px;
+      opacity: 0.7;
+      line-height: 1.5;
+    }
+
+    .music-circle-btn {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: #5e050f;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e6e2d3;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+      transition: transform 120ms ease, opacity 120ms ease;
+    }
+    .music-circle-btn:active {
+      transform: scale(0.96);
+    }
+    .music-circle-btn svg {
+      width: 52px;
+      height: 52px;
+      fill: currentColor;
+    }
+    .music-circle-btn.playing {
+      animation: musicPulse 2s infinite;
+    }
+    @keyframes musicPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(230, 226, 211, 0.45); }
+      50% { box-shadow: 0 0 0 10px rgba(230, 226, 211, 0); }
+    }
+
+    .btn-rsvp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 0 12px;
+      text-decoration: none;
+      font-family: 'Prata', serif;
+      font-size: 12px;
+      font-weight: 500;
+      background-color: #e6e2d3;
+      color: #5e050f;
+      border: 2px solid #e6e2d3;
+      cursor: pointer;
+      transition: filter 120ms ease;
+    }
+    .btn-rsvp:hover {
+      filter: brightness(0.92);
+    }
+
+    .btn-location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 0 12px;
+      text-decoration: none;
+      font-family: 'Prata', serif;
+      font-size: 12px;
+      font-weight: 500;
+      background-color: transparent;
+      color: #5e050f;
+      border: 2px solid #5e050f;
+      cursor: pointer;
+      transition: background-color 120ms ease;
+    }
+    .btn-location:hover {
+      background-color: rgba(94, 5, 15, 0.08);
+    }
+
+    .dress-code {
+      position: absolute;
+      left: 35px;
+      top: 590px;
+      width: 330px;
+      z-index: 20;
+      color: #e6e2d3;
+      text-align: center;
+      font-family: 'Prata', serif;
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.04em;
+    }
+    .dress-code-title {
+      display: block;
+      margin-bottom: 3px;
+      font-family: 'Pinyon Script', cursive;
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .dress-code strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .parchment-card {
+      position: absolute;
+      left: 35px;
+      top: 662px;
+      width: 330px;
+      min-height: 198px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 25px;
+      color: #5e050f;
+      text-align: center;
+      font-family: 'Prata', serif;
+      font-size: 14px;
+      line-height: 1.7;
+      background: linear-gradient(135deg, #f3e8c9 0%, #e6d5aa 48%, #f1e5c4 100%);
+      border: 1px solid rgba(94, 5, 15, 0.55);
+      border-radius: 42% 9% 40% 10% / 9% 38% 9% 37%;
+      box-shadow: inset 0 0 18px rgba(94, 5, 15, 0.16), 0 5px 14px rgba(0, 0, 0, 0.24);
+    }
+    .parchment-card::before {
+      content: '';
+      position: absolute;
+      inset: 7px;
+      border: 1px solid rgba(94, 5, 15, 0.32);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    @media (max-width: 400px) {
+      .dress-code { left: 5%; width: 90%; }
+      .parchment-card { left: 5%; width: 90%; padding: 26px 22px; font-size: 13px; }
+    }
+  
+
+    /* Portada ilustrada de carta sellada */
+    html.gate-locked, body.gate-locked { overflow: hidden; }
+    .invitation-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at center, rgba(116, 12, 27, .72), transparent 58%),
+        #21040a;
+      opacity: 1;
+      visibility: visible;
+    }
+    .invitation-gate.is-opening {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .32s ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .invitation-gate.is-opening { transition-duration: .01ms; }
+      .invitation-gate.is-pressed .cover-scene { transition-duration: .01ms; }
+    }
+    .cover-scene {
+      position: relative;
+      width: min(100vw, 75dvh);
+      height: min(100dvh, 133.333vw);
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      isolation: isolate;
+      background: #31070d;
+      border: 2px solid rgba(139, 20, 39, .95);
+      box-shadow: 0 0 0 1px rgba(210, 157, 81, .72), 0 0 55px rgba(0,0,0,.65), inset 0 0 0 5px rgba(90, 8, 22, .4);
+      transition: transform .22s ease, filter .22s ease, box-shadow .22s ease;
+    }
+    .invitation-gate.is-pressed .cover-scene {
+      transform: scale(.975);
+      filter: brightness(1.12);
+      box-shadow: 0 0 0 3px rgba(160, 28, 48, .92), 0 0 38px rgba(174, 30, 48, .45), inset 0 0 0 5px rgba(90, 8, 22, .45);
+    }
+    .cover-art {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      user-select: none;
+      pointer-events: none;
+    }
+    .cover-title {
+      position: absolute;
+      z-index: 4;
+      top: 2.8%;
+      left: 0;
+      width: 100%;
+      color: #e2bd69;
+      text-align: center;
+      font-family: 'Prata', serif;
+      font-size: clamp(23px, 7vw, 39px);
+      line-height: .94;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #614116, 0 4px 15px rgba(0,0,0,.9);
+      pointer-events: none;
+    }
+    .cover-title span { display: block; }
+    .cover-title .cover-xv { font-size: 1.36em; letter-spacing: .07em; }
+    .cover-name {
+      position: absolute;
+      z-index: 4;
+      top: 34%;
+      left: 19%;
+      width: 62%;
+      color: #694017;
+      text-align: center;
+      font-family: 'Pinyon Script', cursive;
+      font-size: clamp(34px, 9.5vw, 55px);
+      font-weight: 700;
+      line-height: .9;
+      text-shadow: 0 1px 1px rgba(255,245,210,.7);
+      transform: rotate(-2deg);
+      pointer-events: none;
+    }
+    .cover-name span { display: block; }
+    .envelope-open {
+      position: absolute;
+      z-index: 3;
+      top: 19%;
+      left: 15%;
+      width: 70%;
+      height: 62%;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .envelope-open:focus-visible {
+      outline: 3px solid #e5c776;
+      outline-offset: 5px;
+      border-radius: 8px;
+    }
+    .cover-instruction {
+      position: absolute;
+      z-index: 4;
+      left: 5%;
+      bottom: 4.5%;
+      width: 90%;
+      color: #f4e9cd;
+      text-align: center;
+      font-family: 'Prata', serif;
+      font-size: clamp(12px, 3.8vw, 17px);
+      line-height: 1.55;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0,0,0,.95);
+      pointer-events: none;
+    }
+    @media (max-height: 560px) and (min-aspect-ratio: 1/1) {
+      .cover-scene { width: min(100vw, 75dvh); height: min(100dvh, 133.333vw); }
+    }
+  </style>
+</head>
+<body class="gate-locked">
+  <div class="invitation-gate" id="invitation-gate">
+    <div class="cover-scene">
+      <img class="cover-art" src="invitation_cover_art.png" alt="Sobre rojo borgoña sellado con lacre dorado y una carta de pergamino" draggable="false">
+      <p class="cover-title"><span>Mis</span><span class="cover-xv">XV años</span></p>
+      <p class="cover-name"><span>Deysi</span><span>Ariana</span></p>
+      <button class="envelope-open" type="button" onclick="openInvitation()" aria-label="Abrir la carta sellada y ver la invitación de XV años de Deysi Ariana"></button>
+      <p class="cover-instruction">Toca el sello del sobre<br>para abrir la invitación</p>
+    </div>
+  </div>
+
+
+  <div class="page-viewport">
+    <div class="invitation-scaler" id="invitation-scaler">
+
+      <!-- ========================================================
+           SECCIÓN 1: PORTADA & CONTADOR
+      ======================================================== -->
+      <div class="canvas-section" data-section-id="section_1">
+        <div class="section-inner">
+
+          <!-- Imagen de fondo pergamino -->
+          <div class="primitive" style="left:-2.25px; top:-6.21875px; width:460.56640625px; height:758.7109375px; z-index:1;">
+            <div class="anim-node effect-fade-in speed-100">
+              <img class="img-fit-cover" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/invitaciones/a447947c-b1c1-40b6-9bf7-bcbe307c83a8/canvas-v4/4d10a52a-13f2-461d-8731-22fd8713642d.webp" alt="" draggable="false"/>
+            </div>
+          </div>
+
+          <!-- Borde de papel rasgado superior -->
+          <div class="primitive" style="left:72.6328125px; top:-221.83203125px; width:207.8515625px; height:619.58203125px; transform:rotate(-90deg); z-index:2;">
+            <div class="anim-node effect-fade-in speed-100">
+              <img class="img-fit-contain" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/99f0bf7b-57ee-4f99-9641-6ef721e7dfec.webp" alt="" draggable="false"/>
+            </div>
+          </div>
+
+          <!-- Figura máscara vino tinto inferior -->
+          <div class="primitive" style="left:-202.28125px; top:379.96875px; width:443.26171875px; height:409.21484375px; z-index:3;">
+            <div class="solid-mask" style="-webkit-mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/409d16fc-b7d2-4d61-9288-6cfa93ef14f8.svg); mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/409d16fc-b7d2-4d61-9288-6cfa93ef14f8.svg);"></div>
+          </div>
+
+          <!-- Borde de papel rasgado inferior -->
+          <div class="primitive" style="left:153.17578125px; top:338.83984375px; width:207.8515625px; height:619.58203125px; transform:rotate(90deg); z-index:4;">
+            <div class="anim-node effect-fade-in speed-100">
+              <img class="img-fit-contain" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/99f0bf7b-57ee-4f99-9641-6ef721e7dfec.webp" alt="" draggable="false"/>
+            </div>
+          </div>
+
+          <!-- Flor borgoña esquina superior derecha -->
+          <div class="primitive" style="left:221.7578125px; top:-49.85546875px; width:231.765625px; height:221.09765625px; z-index:5;">
+            <div class="anim-node effect-diagonal-in speed-50">
+              <img class="img-fit-contain" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/75679409-77f9-4fe6-a872-7cb9d05b8a2a.webp" alt="" draggable="false"/>
+            </div>
+          </div>
+
+          <!-- Flor borgoña esquina inferior izquierda -->
+          <div class="primitive" style="left:-50.05078125px; top:589.14453125px; width:231.765625px; height:221.09765625px; z-index:6;">
+            <div class="anim-node effect-diagonal-right speed-50">
+              <img class="img-fit-contain" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/75679409-77f9-4fe6-a872-7cb9d05b8a2a.webp" alt="" draggable="false"/>
+            </div>
+          </div>
+
+          <!-- Texto: Mis -->
+          <div class="primitive" style="left:40.1015625px; top:179.8671875px; width:320px; height:74px; z-index:7;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:60px; font-weight:700; text-align:center; line-height:1.2; letter-spacing:0.11em; color:#5e050f;">Mis</div>
+            </div>
+          </div>
+
+          <!-- Texto: XV -->
+          <div class="primitive" style="left:114.171875px; top:245.19140625px; width:184.89453125px; height:136.17373px; z-index:8;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Prata', serif; font-size:106px; font-weight:700; text-align:center; line-height:1.2; letter-spacing:0.11em; color:#5e050f;">XV</div>
+            </div>
+          </div>
+
+          <!-- Texto: Deysi Ariana -->
+          <div class="primitive" style="left:10.728515625px; top:400.504834px; width:378.74609375px; height:133px; z-index:9;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:55px; font-weight:700; text-align:center; line-height:1.2; letter-spacing:0.11em; color:#5e050f;">Deysi Ariana</div>
+            </div>
+          </div>
+
+          <!-- Texto: 7.Nov.26 -->
+          <div class="primitive" style="left:79.607421875px; top:552.64453125px; width:270.13671875px; height:56.2734375px; z-index:10;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Prata', serif; font-size:20px; font-weight:700; text-align:center; line-height:1.2; letter-spacing:0.11em; color:#5e050f;">7.Nov.26</div>
+            </div>
+          </div>
+
+          <!-- Contador regresivo -->
+          <div class="primitive" style="left:55.2421875px; top:806.171875px; width:303.70703125px; height:86.7734375px; z-index:11;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="countdown-row">
+                <div class="cd-col">
+                  <p class="cd-num" id="days">15</p>
+                  <p class="cd-lbl">días</p>
+                </div>
+                <div class="cd-col">
+                  <p class="cd-num" id="hours">15</p>
+                  <p class="cd-lbl">hrs</p>
+                </div>
+                <div class="cd-col">
+                  <p class="cd-num" id="mins">43</p>
+                  <p class="cd-lbl">min</p>
+                </div>
+                <div class="cd-col">
+                  <p class="cd-num" id="secs">02</p>
+                  <p class="cd-lbl">seg</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Texto: Faltan -->
+          <div class="primitive" style="left:157.3515625px; top:777.54296875px; width:114.6484375px; height:32px; z-index:12;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Prata', serif; font-size:20px; font-weight:400; text-align:center; line-height:1.2; letter-spacing:0.11em; color:#e6e2d3;">Faltan</div>
+            </div>
+          </div>
+
+          <!-- Botón de Música -->
+          <div class="primitive interactive" style="left:330.94921875px; top:681.36328125px; width:56px; height:56px; z-index:13;">
+            <div class="anim-node effect-rise speed-50">
+              <button class="music-circle-btn" id="music-btn" title="Reproducir música" onclick="toggleMusic()">
+                <audio id="bg-audio" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/invitaciones/427d590c-06db-4c1e-a1f6-1231b18b85ee/canvas-v4/file_60f4cfbc-055e-4ba2-9f6a-2f735144e965.mp3" preload="auto"></audio>
+                <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ========================================================
+           SECCIÓN 2: PADRES Y PADRINOS (CENTRADOS COMO EN LA IMAGEN 1)
+      ======================================================== -->
+      <div class="canvas-section" data-section-id="section_2">
+        <div class="section-inner">
+
+          <!-- Blonda / Marco de encaje beige superior -->
+          <div class="primitive" style="left:30.53515625px; top:22.62109375px; width:344.94140625px; height:495.92578125px; z-index:1;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="tinted-figure">
+                <img src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/a4a3f3f2-e9fd-4083-b09f-8770eb8cb41a.webp" alt="" draggable="false"/>
+                <div class="tinted-overlay" style="background-color:#e6e2d3; -webkit-mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/a4a3f3f2-e9fd-4083-b09f-8770eb8cb41a.webp); mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/a4a3f3f2-e9fd-4083-b09f-8770eb8cb41a.webp);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Texto: Padres -->
+          <div class="primitive" style="left:59.814815px; top:555.902731px; width:280.37037px; height:43.424806px; z-index:2;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:34px; font-weight:400; text-align:center; line-height:1.25; color:#e6e2d3;">Padres</div>
+            </div>
+          </div>
+
+          <!-- Nombres Padres (Centrados exactamente bajo el título) -->
+          <div class="primitive" style="left:36.4px; top:616.246662px; width:327.2px; height:64px; z-index:4;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:23px; font-weight:400; text-align:center; line-height:1.4; color:#ffffff;">Victor Canales y Erseny Chavez</div>
+            </div>
+          </div>
+
+          <!-- Texto: Padrinos -->
+          <div class="primitive" style="left:59.814815px; top:697.165787px; width:280.37037px; height:43.424806px; z-index:3;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:34px; font-weight:400; text-align:center; line-height:1.25; color:#e6e2d3;">Padrinos</div>
+            </div>
+          </div>
+
+          <!-- Nombres Padrinos (Centrados exactamente como en tu primera imagen) -->
+          <div class="primitive" style="left:36.4px; top:759.278184px; width:327.2px; height:33px; z-index:5;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:23px; font-weight:400; text-align:center; line-height:1.4; color:#ffffff;">Juan Luis Durand y Flavia Zuñiga</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ========================================================
+           SECCIÓN 3: CEREMONIA, RECEPCIÓN Y CONFIRMACIÓN
+      ======================================================== -->
+      <div class="canvas-section" data-section-id="section_3" style="height:1220px;">
+        <div class="section-inner">
+
+          <!-- Papel rasgado blanco Ceremonia (rotado -90deg + diagonal-in) -->
+          <div class="primitive" style="left:75.139034px; top:-10.080295px; width:237.144387px; height:342.844039px; transform:rotate(-90deg); z-index:1;">
+            <div class="anim-node effect-diagonal-in speed-50">
+              <img class="img-fit-contain" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/cce3feff-60a0-41bf-a16c-da5720191b4f.webp" alt="" draggable="false"/>
+            </div>
+          </div>
+
+          <!-- Ramita blanca decorativa izquierda 1 -->
+          <div class="primitive" style="left:-16.388617px; top:239.377919px; width:117.93px; height:205.29005px; transform:rotate(135.4deg); z-index:3;">
+            <div class="tinted-figure">
+              <img src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/926c341f-ce0f-47af-9880-c8b3dfc2af54.webp" alt="" draggable="false"/>
+              <div class="tinted-overlay" style="background-color:#ffffff; -webkit-mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/926c341f-ce0f-47af-9880-c8b3dfc2af54.webp); mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/926c341f-ce0f-47af-9880-c8b3dfc2af54.webp);"></div>
+            </div>
+          </div>
+
+          <!-- Ramita blanca decorativa izquierda 2 -->
+          <div class="primitive" style="left:93.959039px; top:279.643544px; width:117.93px; height:205.29005px; transform:rotate(74.2deg); z-index:4;">
+            <div class="tinted-figure">
+              <img src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/926c341f-ce0f-47af-9880-c8b3dfc2af54.webp" alt="" draggable="false"/>
+              <div class="tinted-overlay" style="background-color:#ffffff; -webkit-mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/926c341f-ce0f-47af-9880-c8b3dfc2af54.webp); mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/926c341f-ce0f-47af-9880-c8b3dfc2af54.webp);"></div>
+            </div>
+          </div>
+
+          <!-- Texto: Ceremonia -->
+          <div class="primitive" style="left:51.91305px; top:67.280099px; width:260.37037px; height:40.327132px; z-index:5;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:32px; font-weight:400; text-align:center; line-height:1.25; color:#5e050f;">Ceremonia</div>
+            </div>
+          </div>
+
+          <!-- Texto: 8:00 pm Local " La Cabañita " CHUQUIBAMBA -->
+          <div class="primitive" style="left:73.806391px; top:119.341725px; width:224.820088px; height:42px; z-index:6;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Prata', serif; font-size:15px; font-weight:400; text-align:center; line-height:1.4; color:#1a1a1a;">8:00 pm Local " La Cabañita "
+CHUQUIBAMBA</div>
+            </div>
+          </div>
+
+          <!-- Blonda circular de encaje Recepción (#e6e2d3) -->
+          <div class="primitive" style="left:126.079861px; top:175.124711px; width:360px; height:398.518519px; z-index:7;">
+            <div class="anim-node effect-diagonal-in speed-55">
+              <div class="tinted-figure">
+                <img src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/7d9a27a7-1fc6-4640-acad-1a0cd79e1962.webp" alt="" draggable="false"/>
+                <div class="tinted-overlay" style="background-color:#e6e2d3; -webkit-mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/7d9a27a7-1fc6-4640-acad-1a0cd79e1962.webp); mask-image:url(https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/7d9a27a7-1fc6-4640-acad-1a0cd79e1962.webp);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Texto: Recepción -->
+          <div class="primitive" style="left:171.449877px; top:302.726389px; width:260.37037px; height:40.327132px; z-index:9;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:32px; font-weight:400; text-align:center; line-height:1.25; color:#5e050f;">Recepción </div>
+            </div>
+          </div>
+
+          <!-- Texto: LA CABAÑITA -->
+          <div class="primitive" style="left:218.808997px; top:382.288569px; width:174.541728px; height:24px; z-index:10;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Prata', serif; font-size:14px; font-weight:400; text-align:center; line-height:1.4; color:#1a1a1a;">LA CABAÑITA </div>
+            </div>
+          </div>
+
+          <!-- Flor borgoña izquierda -->
+          <div class="primitive" style="left:-13.3984375px; top:213.859375px; width:222.039605px; height:225.375px; transform:rotate(-15.4deg); z-index:12;">
+            <div class="anim-node effect-diagonal-right speed-45">
+              <img class="img-fit-contain" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/75679409-77f9-4fe6-a872-7cb9d05b8a2a.webp" alt="" draggable="false"/>
+            </div>
+          </div>
+
+          <!-- Sello de lacre dorado con corazón -->
+          <div class="primitive" style="left:123.0859375px; top:192.78125px; width:126.260995px; height:117.553521px; z-index:16;">
+            <div class="anim-node effect-rise speed-50">
+              <img class="img-fit-contain" src="https://ovjstvkjedyscwyfnoma.supabase.co/storage/v1/object/public/figures/e9cc4dd3-739c-4fb7-9fa3-fc9e5b1d437c.webp" alt="" draggable="false"/>
+            </div>
+          </div>
+
+          <!-- Botón: VER UBICACIÓN -->
+          <div class="primitive interactive" style="left:97.359954px; top:175.124711px; width:169.476562px; height:41.427604px; z-index:18;">
+            <div class="anim-node effect-rise speed-50">
+              <a class="btn-location" href="https://maps.app.goo.gl/Sfj78vBaQRDHg7De8" target="_blank" rel="noopener noreferrer">
+                <span>VER UBICACIÓN</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Código de vestimenta -->
+          <div class="dress-code"><span class="dress-code-title">Código de vestimenta</span><strong>Sport elegante</strong></div>
+
+          <!-- Mensaje de invitación en pergamino -->
+          <div class="parchment-card">Quince años atrás, Dios me entregó en las manos de unos padres maravillosos que me enseñaron a caminar con amor. Hoy les agradezco a ellos por mi vida y a ti por formar parte de ella. Ven a celebrar conmigo la alegría de este día tan esperado.</div>
+
+          <!-- Texto: Confirmar asistencia -->
+          <div class="primitive" style="left:64.713043px; top:960px; width:260.37037px; height:40.327132px; z-index:13;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Pinyon Script', cursive; font-size:32px; font-weight:400; text-align:center; line-height:1.25; color:#e6e2d3;">Confirmar asistencia</div>
+            </div>
+          </div>
+
+          <!-- Texto: Agradecemos confirmes asistencia antes del 1 de noviembre. -->
+          <div class="primitive" style="left:71.067647px; top:1020px; width:254.592509px; height:39px; z-index:15;">
+            <div class="anim-node effect-rise speed-50">
+              <div class="text-node" style="font-family:'Prata', serif; font-size:14px; font-weight:400; text-align:center; line-height:1.4; color:#e6e2d3;">Agradecemos confirmes asistencia antes del 1 de noviembre.</div>
+            </div>
+          </div>
+
+          <!-- Botón: CONFIRMAR ASISTENCIA -->
+          <div class="primitive interactive" style="left:101.76953125px; top:1095px; width:200px; height:48px; z-index:17;">
+            <div class="anim-node effect-rise speed-50">
+              <a class="btn-rsvp" href="https://wa.me/51937467200?text=Hola,%20confirmo%20mi%20asistencia%20a%20los%20XV%20de%20Deysi%20Ariana." target="_blank" rel="noopener noreferrer">
+                <span>CONFIRMAR ASISTENCIA</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+
+    // Mostrar inmediatamente la invitación y comenzar el audio desde la interacción del usuario.
+    function openInvitation() {
+      const gate = document.getElementById('invitation-gate');
+      const audio = document.getElementById('bg-audio');
+      if (!gate || gate.classList.contains('is-opening')) return;
+      gate.classList.add('is-pressed');
+      window.scrollTo(0, 0);
+      if (audio) {
+        audio.volume = 0.75;
+        audio.play().then(() => {
+          if (typeof updateMusicUI === 'function') updateMusicUI();
+          window.removeEventListener('click', unlockAudio);
+          window.removeEventListener('touchstart', unlockAudio);
+        }).catch(() => {});
+      }
+      // Primero responde la carta al toque; después se desvanece para dar paso al contenido.
+      window.setTimeout(() => {
+        gate.classList.add('is-opening');
+        window.setTimeout(() => {
+          gate.remove();
+          document.body.classList.remove('gate-locked');
+          document.documentElement.classList.remove('gate-locked');
+        }, 340);
+      }, 230);
+    }
+
+    // ========================================================
+    // 1. OBSERVADOR DE SCROLL CALIBRADO PARA CADA PRIMITIVA
+    // ========================================================
+    // Se observa el contenedor .primitive (que no tiene transformaciones de desplazamiento)
+    // para que el disparo de la animación sea exacto al bajar o subir.
+    const primitives = document.querySelectorAll('.primitive');
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const animNode = entry.target.querySelector('.anim-node');
+        if (!animNode) return;
+
+        if (entry.isIntersecting) {
+          animNode.classList.add('in-view');
+        } else {
+          animNode.classList.remove('in-view');
+        }
+      });
+    }, {
+      threshold: 0.08,
+      rootMargin: '0px 0px -25px 0px'
+    });
+
+    primitives.forEach((prim) => scrollObserver.observe(prim));
+
+    // ========================================================
+    // 2. MÚSICA (AUTOPLAY + BOTÓN)
+    // ========================================================
+    const audio = document.getElementById('bg-audio');
+    const musicBtn = document.getElementById('music-btn');
+    audio.volume = 0.75;
+
+    function updateMusicUI() {
+      if (!audio.paused) {
+        musicBtn.classList.add('playing');
+      } else {
+        musicBtn.classList.remove('playing');
+      }
+    }
+
+    function toggleMusic() {
+      if (audio.paused) {
+        audio.play().then(updateMusicUI).catch(() => {});
+      } else {
+        audio.pause();
+        updateMusicUI();
+      }
+    }
+
+    function unlockAudio() {
+      audio.play().then(() => {
+        updateMusicUI();
+        window.removeEventListener('click', unlockAudio);
+        window.removeEventListener('touchstart', unlockAudio);
+      }).catch(() => {});
+    }
+    window.addEventListener('click', unlockAudio, { once: true });
+    window.addEventListener('touchstart', unlockAudio, { once: true });
+
+    // ========================================================
+    // 3. CUENTA REGRESIVA (7 DE NOVIEMBRE DE 2026, 20:00 HRS)
+    // ========================================================
+    const targetDate = new Date(2026, 10, 7, 20, 0, 0).getTime();
+
+    function updateCountdown() {
+      const diff = targetDate - Date.now();
+      const d = document.getElementById('days'),
+            h = document.getElementById('hours'),
+            m = document.getElementById('mins'),
+            s = document.getElementById('secs');
+
+      if (diff <= 0) {
+        d.textContent = h.textContent = m.textContent = s.textContent = '00';
+        return;
+      }
+
+      d.textContent = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+      h.textContent = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+      m.textContent = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+      s.textContent = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
